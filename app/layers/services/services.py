@@ -25,19 +25,20 @@ def getAllImages():
 def filterByCharacter(name):
     filtered_cards = []
 
-    for card in getAllImages():
-        # debe verificar si el name está contenido en el nombre de la card, antes de agregarlo al listado de filtered_cards.
-        filtered_cards.append(card)
-
+    for card in getAllImages():  #Recorremos las cards obtenidas de la API.
+        if name.lower() in card.name.lower(): #Comprobamos si el texto "name" está dentro del nombre de la card.
+            filtered_cards.append(card) #Si coincide se agrega a la lista filtrada.
+        
     return filtered_cards
 
 # función que filtra las cards según su tipo.
 def filterByType(type_filter):
     filtered_cards = []
 
-    for card in getAllImages():
-        # debe verificar si la casa de la card coincide con la recibida por parámetro. Si es así, se añade al listado de filtered_cards.
-        filtered_cards.append(card)
+    for card in getAllImages(): #Recorremos las cards obtenidas.
+        for t in card.types:
+            if t.lower() == type_filter.lower():
+                filtered_cards.append(card) #Si coincide la agregamos a la lista filtrada.
 
     return filtered_cards
 
