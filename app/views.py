@@ -5,9 +5,24 @@ from .layers.services import services
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from app.layers.services import services
+from django.contrib.auth import authenticate, login #Autenticar inicio de cesion 
+from .form import RegistroForm
 
 def index_page(request):
     return render(request, 'index.html')
+def login(request):
+    return render(request, 'index.html')
+    
+def register(request):
+    if request.method == 'POST':
+        form = RegistroForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')  # o redireccioná a donde quieras
+    else:
+        form = RegistroForm()
+    return render(request, 'registration/register.html', {'form': form})
+    
 
 # esta función obtiene 2 listados: uno de las imágenes de la API y otro de favoritos, ambos en formato Card, y los dibuja en el template 'home.html'.
 def home(request):
@@ -40,6 +55,20 @@ def filter_by_type(request):
         return render(request, 'home.html', { 'images': images, 'favourite_list': favourite_list })
     else:
         return redirect('home')
+
+#funcion para iniciar cesion como usuario 
+def my_view(request):
+    username = request.POST["username"]
+    password = request.POST["password"]
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        return redirect(home)  # redirecciona a otra pagina 
+   
+    else:
+        print(request, 'Usuario o contraseña incorrectos')
+        # Return an 'invalid login' error message.
+    return render(request, 'login.html')
 
 # Estas funciones se usan cuando el usuario está logueado en la aplicación.
 @login_required

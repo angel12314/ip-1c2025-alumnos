@@ -75,3 +75,4 @@ def get_type_icon_url_by_name(type_name):
     if not type_id:
         return None
     return transport.get_type_icon_url_by_id(type_id)
+
