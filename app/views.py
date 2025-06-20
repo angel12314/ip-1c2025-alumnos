@@ -7,6 +7,9 @@ from django.contrib.auth import logout
 from app.layers.services import services
 from django.contrib.auth import authenticate, login #Autenticar inicio de cesion 
 from .form import RegistroForm
+from app.layers.persistence.repositories import save_user 
+from django.contrib.auth.models import User
+from django.contrib import messages
 
 def index_page(request):
     return render(request, 'index.html')
@@ -17,12 +20,28 @@ def register(request):
     if request.method == 'POST':
         form = RegistroForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('login')  # o redireccioná a donde quieras
+            user=type('User', (), {})()
+            user.username=form.cleaned_data["username"]
+            user.email = form.cleaned_data['email']
+            user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
+            user.password = form.cleaned_data['password1']
+
+            if User.objects.filter(username=user.username).exists():
+                messages.error(request, "El nombre de usuario ya está en uso.")
+            elif User.objects.filter(email=user.email).exists():
+                messages.error(request, "El email ya está registrado.")
+            else:
+                save_user(user) 
+                messages.success(request, "Usuario creado correctamente. Ahora podés iniciar sesión.")
+                return redirect('login')
     else:
         form = RegistroForm()
+
     return render(request, 'registration/register.html', {'form': form})
-    
+
+
+
 
 # esta función obtiene 2 listados: uno de las imágenes de la API y otro de favoritos, ambos en formato Card, y los dibuja en el template 'home.html'.
 def home(request):
