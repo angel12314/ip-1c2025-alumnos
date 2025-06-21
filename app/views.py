@@ -10,6 +10,22 @@ from .form import RegistroForm
 from app.layers.persistence.repositories import save_user 
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.conf import settings
+from .form import SubscribeForm
+from django.core.mail import send_mail
+
+def subscribe(request):
+    form = SubscribeForm()
+    if request.method == 'POST': #metodo para enviar datos
+        form = SubscribeForm(request.POST)
+        if form.is_valid():
+            subject = 'Code Band'
+            message = 'Sending Email through Gmail'
+            recipient = form.cleaned_data.get('email')
+            send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient], fail_silently=False)
+            messages.success(request, '¡Correo enviado con éxito!')
+            return redirect('subscribe')
+    return render(request, 'subscriptions/home.html', {'form': form})
 
 def index_page(request):
     return render(request, 'index.html')

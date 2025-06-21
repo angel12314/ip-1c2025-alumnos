@@ -1,5 +1,9 @@
 from django import forms
 
+
+class SubscribeForm(forms.Form):
+    email = forms.EmailField()
+
 class RegistroForm(forms.Form):
     username = forms.CharField(max_length=150, label='Nombre de usuario')
     first_name = forms.CharField(max_length=30, label='Nombre')
