@@ -53,7 +53,7 @@ def register(request):
             elif User.objects.filter(email=user.email).exists():
                 messages.error(request, "El email ya está registrado.")
             else:
-                save_user(user) 
+                save_user(user) #llama a save_user y crea un usuario en la base de datos
                 messages.success(request, "Usuario creado correctamente. Ahora podés iniciar sesión.")
                 return redirect('login')
     else:
