@@ -1,9 +1,10 @@
 from django import forms
 
-
+#formulario donde el usuario debera escribir una direccion de email valida
 class SubscribeForm(forms.Form):
     email = forms.EmailField()
 
+#formulario de registro personalizado
 class RegistroForm(forms.Form):
     username = forms.CharField(max_length=150, label='Nombre de usuario')
     first_name = forms.CharField(max_length=30, label='Nombre')

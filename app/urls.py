@@ -8,7 +8,7 @@ urlpatterns = [
     path('login/', views.index_page, name='login'),
     path('home/', views.home, name='home'),
     
-    path('register/', views.register, name='register'),
+    path('register/', views.register, name='register'),#esto nos indica que funcion debe ejecutar 
     path('buscar/', views.search, name='buscar'),
     
     

@@ -14,6 +14,8 @@ from django.conf import settings
 from .form import SubscribeForm
 from django.core.mail import send_mail
 
+
+#funcion de confirmacion por el email
 def subscribe(request):
     form = SubscribeForm()
     if request.method == 'POST': #metodo para enviar datos
@@ -27,11 +29,15 @@ def subscribe(request):
             return redirect('subscribe')
     return render(request, 'subscriptions/home.html', {'form': form})
 
+
 def index_page(request):
     return render(request, 'index.html')
+
 def login(request):
     return render(request, 'index.html')
     
+
+#funcion que permite registrar un nuevo usuario
 def register(request):
     if request.method == 'POST':
         form = RegistroForm(request.POST)
@@ -42,8 +48,7 @@ def register(request):
             user.first_name = form.cleaned_data['first_name']
             user.last_name = form.cleaned_data['last_name']
             user.password = form.cleaned_data['password1']
-
-            if User.objects.filter(username=user.username).exists():
+            if User.objects.filter(username=user.username).exists():#si el usuario existe tira error
                 messages.error(request, "El nombre de usuario ya está en uso.")
             elif User.objects.filter(email=user.email).exists():
                 messages.error(request, "El email ya está registrado.")
@@ -55,8 +60,6 @@ def register(request):
         form = RegistroForm()
 
     return render(request, 'registration/register.html', {'form': form})
-
-
 
 
 # esta función obtiene 2 listados: uno de las imágenes de la API y otro de favoritos, ambos en formato Card, y los dibuja en el template 'home.html'.
@@ -82,7 +85,6 @@ def search(request):
 # función utilizada para filtrar por el tipo del Pokemon
 def filter_by_type(request):
     type = request.POST.get('type', '')
-
     if type != '':
         images = services.filterByType(type) # Usamos la función de filtro por tipo.
         favourite_list = []
@@ -99,7 +101,6 @@ def my_view(request):
     if user is not None:
         login(request, user)
         return redirect(home)  # redirecciona a otra pagina 
-   
     else:
         print(request, 'Usuario o contraseña incorrectos')
         # Return an 'invalid login' error message.
